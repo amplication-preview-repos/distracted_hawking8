@@ -1,0 +1,37 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model HistoryEntry {
+  conversion         Conversion?                     @relation(fields: [conversionId], references: [id])
+  conversionId       String?
+  conversionType     EnumHistoryEntryConversionType?
+  createdAt          DateTime                        @default(now())
+  finalTemperature   Float?
+  id                 String                          @id @default(cuid())
+  initialTemperature Float?
+  updatedAt          DateTime                        @updatedAt
+}
+
+model Conversion {
+  conversionType       EnumConversionConversionType?
+  convertedTemperature Float?
+  createdAt            DateTime                      @default(now())
+  historyEntries       HistoryEntry[]
+  id                   String                        @id @default(cuid())
+  initialTemperature   Float?
+  updatedAt            DateTime                      @updatedAt
+}
+
+enum EnumHistoryEntryConversionType {
+  Option1
+}
+
+enum EnumConversionConversionType {
+  Option1
+}
